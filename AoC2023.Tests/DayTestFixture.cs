@@ -1,0 +1,26 @@
+namespace AoC2023.Tests;
+
+[TestFixtureSource(nameof(TestSources))]
+internal sealed class DayTestFixture(DayTestCase dayTestCase)
+{
+    private static readonly object[] TestSources =
+    {
+        TestCases.Day1,
+        TestCases.Day2,
+        TestCases.Day3
+    };
+
+    [Test]
+    public void PartOne()
+    {
+        int result = dayTestCase.Day.PartOne(dayTestCase.Input1);
+        Assert.That(result, Is.EqualTo(dayTestCase.ExpectedOutput1));
+    }
+
+    [Test]
+    public void PartTwo()
+    {
+        int result = dayTestCase.Day.PartTwo(dayTestCase.Input2);
+        Assert.That(result, Is.EqualTo(dayTestCase.ExpectedOutput2));
+    }
+}
