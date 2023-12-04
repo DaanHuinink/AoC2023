@@ -4,6 +4,8 @@ using Aoc2023.Days;
 Run<Day1>();
 Run<Day2>();
 Run<Day3>();
+Run<Day4>();
+
 return;
 
 void Run<TDay>() where TDay : IDay, new()
