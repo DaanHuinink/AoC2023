@@ -196,4 +196,17 @@ internal static class TestCases
             56 93 4
             """,
             46);
-}
+
+    public static DayTestCase<Day6> Day6 =>
+        new(
+            """
+            Time:      7  15   30
+            Distance:  9  40  200
+            """,
+            288,
+            """
+            Time:      7  15   30
+            Distance:  9  40  200
+            """,
+            71503);
+        }

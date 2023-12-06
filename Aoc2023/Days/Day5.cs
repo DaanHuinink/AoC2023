@@ -27,7 +27,6 @@ public sealed class Day5 : IDay
                 Select(long.Parse)
                 .ToList();
 
-            Console.WriteLine($"{seeds.Chunk(2).Select(c => c[1]).Sum(c => c)}");
             return new Almanac(seeds, mappings);
         }
 

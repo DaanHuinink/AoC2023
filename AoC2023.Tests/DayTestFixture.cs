@@ -1,3 +1,5 @@
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+
 namespace AoC2023.Tests;
 
 [TestFixtureSource(nameof(TestSources))]
@@ -9,7 +11,8 @@ internal sealed class DayTestFixture(DayTestCase dayTestCase)
         TestCases.Day2,
         TestCases.Day3,
         TestCases.Day4,
-        TestCases.Day5
+        TestCases.Day5,
+        TestCases.Day6
     };
 
     [Test]
