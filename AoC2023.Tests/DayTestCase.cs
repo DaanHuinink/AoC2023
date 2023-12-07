@@ -209,4 +209,23 @@ internal static class TestCases
             Distance:  9  40  200
             """,
             71503);
-        }
+
+    public static DayTestCase<Day7> Day7 => new(
+        """
+        32T3K 765
+        T55J5 684
+        KK677 28
+        KTJJT 220
+        QQQJA 483
+        """
+        ,
+        6440,
+        """
+        32T3K 765
+        T55J5 684
+        KK677 28
+        KTJJT 220
+        QQQJA 483
+        """,
+        5905);
+}

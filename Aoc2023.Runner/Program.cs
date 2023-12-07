@@ -7,7 +7,7 @@ Run<Day3>();
 Run<Day4>();
 Run<Day5>();
 Run<Day6>();
-
+Run<Day7>();
 return;
 
 void Run<TDay>() where TDay : IDay, new()

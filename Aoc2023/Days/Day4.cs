@@ -26,11 +26,11 @@ public sealed class Day4 : IDay
     // In terms of performance this sucks mega-ass and can easily be improved
     // Simply do a loop over the cards with a nested loop for every card to count the amount of cards we get
     private static int ProcessCards(
-        IReadOnlyList<Card> cards,
+        IReadOnlyCollection<Card> cards,
         IReadOnlyDictionary<int, Card> cardDictionary)
     {
         var newCards = new List<Card>();
-        foreach (var card in cards)
+        foreach (Card card in cards)
         {
             if (card.AmountOfMatchingNumbers  == 0)
             {
