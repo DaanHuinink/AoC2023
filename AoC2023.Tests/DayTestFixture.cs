@@ -14,7 +14,8 @@ internal sealed class DayTestFixture(DayTestCase dayTestCase)
         TestCases.Day5,
         TestCases.Day6,
         TestCases.Day7,
-        TestCases.Day8
+        TestCases.Day8,
+        TestCases.Day9
     };
 
     [Test]

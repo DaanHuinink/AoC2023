@@ -229,7 +229,7 @@ internal static class TestCases
         """,
         5905);
 
-    public static DayTestCase<Day8> Day8 => new (
+    public static DayTestCase<Day8> Day8 => new(
         """
         LLR
 
@@ -240,7 +240,7 @@ internal static class TestCases
         6,
         """
         LR
-        
+
         11A = (11B, XXX)
         11B = (XXX, 11Z)
         11Z = (11B, XXX)
@@ -251,4 +251,18 @@ internal static class TestCases
         XXX = (XXX, XXX)
         """,
         6);
+
+    public static DayTestCase<Day9> Day9 => new(
+        """
+        0 3 6 9 12 15
+        1 3 6 10 15 21
+        10 13 16 21 30 45
+        """,
+        114,
+        """
+        0 3 6 9 12 15
+        1 3 6 10 15 21
+        10 13 16 21 30 45
+        """,
+        2);
 }
