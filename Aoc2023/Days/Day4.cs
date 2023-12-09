@@ -9,7 +9,7 @@ public sealed class Day4 : IDay
         return input
             .ToLines()
             .Select(Card.FromLine)
-            .Select(c => c.Points)
+            .Select(c => c.CalculatePoints())
             .Sum();
     }
 
@@ -20,48 +20,38 @@ public sealed class Day4 : IDay
             .Select(Card.FromLine)
             .ToList();
 
-        return ProcessCards(cards, cards.ToDictionary(card => card.Id, card => card));
+        return ProcessCards(cards);
     }
 
-    // In terms of performance this sucks mega-ass and can easily be improved
-    // Simply do a loop over the cards with a nested loop for every card to count the amount of cards we get
-    private static int ProcessCards(
-        IReadOnlyCollection<Card> cards,
-        IReadOnlyDictionary<int, Card> cardDictionary)
+    private static int ProcessCards(IReadOnlyList<Card> cards)
     {
-        var newCards = new List<Card>();
-        foreach (Card card in cards)
+        for (var i = 0; i < cards.Count; ++i)
         {
-            if (card.AmountOfMatchingNumbers  == 0)
+            Card card = cards[i];
+            for (int j = i; j < i + card.AmountOfMatchingNumbers; ++j)
             {
-                continue;
-            }
-
-            for (int id = card.Id + 1;
-                 id < card.Id + 1 + card.AmountOfMatchingNumbers;
-                 ++id)
-            {
-                newCards.Add(cardDictionary[id]);
+                cards[j + 1].Amount += card.Amount;
             }
         }
 
-        if (newCards.Count > 0)
-        {
-            return cards.Count + ProcessCards(newCards, cardDictionary);
-        }
-
-        return cards.Count;
+        return cards.Sum(c => c.Amount);
     }
-    private readonly record struct Card(
-        int Id,
+
+    private record Card(
         IReadOnlyCollection<int> WinningNumbers,
-        IReadOnlyCollection<int> NumbersYouHave)
+        IReadOnlyCollection<int> NumbersYouHave,
+        int AmountOfMatchingNumbers)
     {
+        public int Amount = 1;
+
+        public int CalculatePoints()
+        {
+            return (int)Math.Pow(2, NumbersYouHave.Count(n => WinningNumbers.Contains(n)) - 1);
+        }
+
         public static Card FromLine(string line)
         {
             string[] parts = line.Split('|');
-
-            int cardId = int.Parse(parts[0][5..parts[0].IndexOf(':')]);
 
             string winningNumberString = parts[0][(parts[0].IndexOf(':') + 1)..];
             string numbersYouHaveString = parts[1];
@@ -78,25 +68,15 @@ public sealed class Day4 : IDay
                 .Select(int.Parse)
                 .ToList();
 
-            return new Card(cardId, winningNumbers, numbersYouHave);
+            int amountOfMatchingNumbers = CalculateAmountOfMatchingNumbers(numbersYouHave, winningNumbers);
+            return new Card(winningNumbers, numbersYouHave, amountOfMatchingNumbers);
         }
 
-        public int Points
+        private static int CalculateAmountOfMatchingNumbers(
+            IEnumerable<int> numbersYouHave,
+            IEnumerable<int> winningNumbers)
         {
-            get
-            {
-                var winningNumbers = WinningNumbers;
-                return (int)Math.Pow(2, NumbersYouHave.Count(n => winningNumbers.Contains(n)) - 1);
-            }
-        }
-
-        public int AmountOfMatchingNumbers
-        {
-            get
-            {
-                var winningNumbers = WinningNumbers;
-                return NumbersYouHave.Count(n => winningNumbers.Contains(n));
-            }
+            return numbersYouHave.Count(winningNumbers.Contains);
         }
     }
 }
