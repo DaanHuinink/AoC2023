@@ -8,50 +8,71 @@ public sealed class Day10 : IDay
     public int PartOne(string input)
     {
         var tileMap = GetTileMap(input);
+        return CalculateLongestDistanceInLoop(tileMap);
+    }
+
+    public int PartTwo(string input)
+    {
+        var tileMap = GetTileMap(input);
+        return CalculateTilesInLoop(tileMap);
+    }
+
+    private static int CalculateTilesInLoop(List<List<Tile>> tileMap)
+    {
+        StartingPosition startingPosition = GetStartingPosition(tileMap);
+
+        // Hashset has a faster .Contains
+        var loop = FindLoop(startingPosition, startingPosition.GetConnectedTiles()[0]).ToHashSet();
+        var polygon = loop.Select(l => l.Point).ToArray();
+
+        // Bounding box to pre-filter any points outside of the min and max
+        var boundingBox = new BoundingBox(
+            new Position(loop.Min(l => l.Position.X), loop.Min(l => l.Position.Y)),
+            new Position(loop.Max(l => l.Position.X), loop.Max(l => l.Position.Y)));
+
+        return tileMap
+            .SelectMany(tileRow => tileRow.Where(boundingBox.TileIsWithin))
+            .Where(tile => IsPointInPolygon4(polygon, tile.Point))
+            .Count(t => !loop.Contains(t));
+    }
+
+    private static bool IsPointInPolygon4(IReadOnlyList<Point> polygon, Point testPoint)
+    {
+        var result = false;
+        int j = polygon.Count - 1;
+        for (int i = 0; i < polygon.Count; i++)
+        {
+            if (polygon[i].Y < testPoint.Y && polygon[j].Y >= testPoint.Y ||
+                polygon[j].Y < testPoint.Y && polygon[i].Y >= testPoint.Y)
+            {
+                if (polygon[i].X + (testPoint.Y - polygon[i].Y) /
+                    (polygon[j].Y - polygon[i].Y) *
+                    (polygon[j].X - polygon[i].X) < testPoint.X)
+                {
+                    result = !result;
+                }
+            }
+            j = i;
+        }
+        return result;
+    }
+    private static int CalculateLongestDistanceInLoop(List<List<Tile>> tileMap)
+    {
         StartingPosition startingPosition = GetStartingPosition(tileMap);
         var loop = FindLoop(startingPosition, startingPosition.GetConnectedTiles()[0]);
         return loop.Count / 2 + loop.Count % 2;
     }
 
-
-    public int PartTwo(string input)
+    private static StartingPosition GetStartingPosition(IEnumerable<List<Tile>> tileMap)
     {
-        var tileMap = GetTileMap(input);
-
-        StartingPosition startingPosition = GetStartingPosition(tileMap);
-
-        var loop = FindLoop(startingPosition, startingPosition.GetConnectedTiles()[0]);
-        var polygon = loop.Select(l => l.Point).ToArray();
-
         return tileMap
-            .SelectMany(tileRow => tileRow.Where(t => !loop.Contains(t)))
-            .Count(tile => IsPointInsidePolygon(polygon, tile.Point));
-    }
-
-    private static StartingPosition GetStartingPosition(List<List<Tile>> tileMap)
-    {
-        StartingPosition startingPosition = tileMap
             .SelectMany(t => t)
             .Select(t => t as StartingPosition)
             .Single(t => t != default);
-
-        return startingPosition;
-    }
-
-    private static bool IsPointInsidePolygon(Point[] polygon, Point points)
-    {
-#pragma warning disable CA1416
-        var path = new GraphicsPath();
-
-        path.AddPolygon(polygon);
-
-        var region = new Region(path);
-        return region.IsVisible(points);
-#pragma warning restore CA1416
     }
 
     private static List<Tile> FindLoop(
-        StartingPosition startingPosition,
+        Tile startingPosition,
         Tile startOfLoop)
     {
         var loop = new List<Tile>();
@@ -133,6 +154,15 @@ public sealed class Day10 : IDay
 
     private readonly record struct Position(int X, int Y);
 
+    private record struct BoundingBox(Position TopLeft, Position BottomRight)
+    {
+        public bool TileIsWithin(Tile tile)
+        {
+            return TopLeft.X <= tile.Position.X && tile.Position.X <= BottomRight.X &&
+                   TopLeft.Y <= tile.Position.Y && tile.Position.Y <= BottomRight.Y;
+        }
+
+    }
     private abstract class Tile(
         IReadOnlyList<IReadOnlyList<Tile>> tileMap,
         Position position)
