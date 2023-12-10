@@ -3,13 +3,16 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
       <Compile Update="Days\Day4.cs">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     </ItemGroup>
 
 </Project>
