@@ -20,7 +20,7 @@ public sealed class Day10 : IDay
 
         StartingPosition startingPosition = GetStartingPosition(tileMap);
 
-        var loop = FindLoop(startingPosition, startingPosition.GetConnect edTiles()[0]);
+        var loop = FindLoop(startingPosition, startingPosition.GetConnectedTiles()[0]);
         var polygon = loop.Select(l => l.Point).ToArray();
 
         return tileMap
