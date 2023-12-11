@@ -13,4 +13,9 @@ public static class Utils
     {
         return str.ToLines().Select(s => s.ToArray()).ToArray();
     }
+
+    public static List<List<char>> ToMatrix(this string str)
+    {
+        return str.ToLines().Select(s => s.ToList()).ToList();
+    }
 }
